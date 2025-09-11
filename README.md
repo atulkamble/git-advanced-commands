@@ -46,6 +46,24 @@ git stash apply
 git stash drop
 ```
 
+```
+nano temp.txt 
+git status
+git stash save
+ls
+cat temp.txt 
+git stash list
+git stash show
+git stash show -p stash@{0}
+git stash apply stash@{0}
+git stash drop stash@{0}
+git stash pop
+git stash branch feature-from-stash stash@{0}
+git stash -u
+git stash -a
+git stash clear
+```
+
 ---
 
 ## 📌 2️⃣ Git Rebase — Reapply Commits on Top of Another Base
