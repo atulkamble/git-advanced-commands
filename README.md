@@ -1,3 +1,85 @@
+## 🔁 **Git Commands – Differences Table**
+
+| **Command**  | **Purpose**                 | **Works On**         | **Key Difference / When to Use**        |
+| ------------ | --------------------------- | -------------------- | --------------------------------------- |
+| `git clone`  | Copy a remote repository    | Remote → Local       | Creates a new local repo with history   |
+| `git init`   | Initialize empty repository | Local                | Used when starting from scratch         |
+| `git status` | Show repo status            | Working tree         | Shows modified, staged, untracked files |
+| `git add`    | Stage files                 | Working → Staging    | Prepares files for commit               |
+| `git commit` | Save snapshot               | Staging → Local repo | Creates a commit with message           |
+| `git push`   | Upload commits              | Local → Remote       | Shares changes with team                |
+| `git pull`   | Fetch + merge               | Remote → Local       | Updates local branch                    |
+| `git fetch`  | Download changes only       | Remote → Local       | Does **not** merge automatically        |
+| `git merge`  | Combine branches            | Branch → Branch      | Preserves commit history                |
+| `git rebase` | Reapply commits             | Branch → Branch      | Creates linear history                  |
+
+---
+
+## 🌿 **Branching Commands**
+
+| **Command**           | **Purpose**          | **Key Difference**     |
+| --------------------- | -------------------- | ---------------------- |
+| `git branch`          | List/create branches | Does not switch branch |
+| `git checkout branch` | Switch branch        | Older method           |
+| `git switch branch`   | Switch branch        | Safer & newer          |
+| `git checkout -b dev` | Create + switch      | One-step operation     |
+| `git switch -c dev`   | Create + switch      | Modern alternative     |
+
+---
+
+## 🔄 **Undo & Fix Commands**
+
+| **Command**                | **Use Case**             | **Effect**             |
+| -------------------------- | ------------------------ | ---------------------- |
+| `git restore file`         | Discard local changes    | Working directory only |
+| `git reset file`           | Unstage file             | Staging → Working      |
+| `git reset --soft HEAD~1`  | Undo commit              | Keeps changes staged   |
+| `git reset --mixed HEAD~1` | Undo commit              | Keeps changes unstaged |
+| `git reset --hard HEAD~1`  | Remove commit completely | ⚠️ Deletes changes     |
+| `git revert <commit>`      | Undo safely              | Creates new commit     |
+
+---
+
+## 🔍 **Logs & History**
+
+| **Command**         | **Purpose**      | **Best Use Case**  |
+| ------------------- | ---------------- | ------------------ |
+| `git log`           | Full history     | Deep inspection    |
+| `git log --oneline` | Short history    | Quick view         |
+| `git show`          | Commit details   | Inspect one commit |
+| `git diff`          | File differences | Before commit      |
+| `git blame file`    | Who changed what | Debugging          |
+
+---
+
+## 🧹 **Cleanup Commands**
+
+| **Command**     | **Purpose**            | **Notes**            |
+| --------------- | ---------------------- | -------------------- |
+| `git clean -n`  | Preview delete         | Safe check           |
+| `git clean -f`  | Delete untracked files | ⚠️ Permanent         |
+| `git rm file`   | Delete tracked file    | Staged automatically |
+| `git stash`     | Save work temporarily  | Useful before pull   |
+| `git stash pop` | Restore stashed work   | Removes stash        |
+
+---
+
+## 🔐 **Remote Commands**
+
+| **Command**                 | **Purpose**  | **Notes**              |
+| --------------------------- | ------------ | ---------------------- |
+| `git remote -v`             | Show remotes | Verify URLs            |
+| `git remote add origin url` | Add remote   | First-time setup       |
+| `git push -u origin main`   | Set upstream | Simplifies future push |
+
+---
+
+## 💡 **Interview Tip**
+
+> **Use `git revert` for shared branches, `git reset` for local mistakes**
+> **Use `git fetch` before risky merges**
+
+
 # 📑 **Git Advanced Commands — Complete Practice Guide (Mini-Lab)**
 
 > 🎯 **Goal**
