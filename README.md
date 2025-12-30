@@ -1,220 +1,389 @@
-**structured, detailed code guide with explanations, step-by-step commands, and a simulated practice scenario**. You’ll be able to follow this on your system like a mini-lab.
+# 📑 **Git Advanced Commands — Complete Practice Guide (Mini-Lab)**
+
+> 🎯 **Goal**
+> Master **stash, rebase, cherry-pick, reset, reflog, tags, clean, blame, diff, bisect, squash merge**
+> — exactly how **senior DevOps engineers use Git daily**.
 
 ---
 
-# 📑 Git Advanced Commands — Complete Practice Guide
+## 🧠 Git Advanced Architecture Refresher
+
+![Image](https://miro.medium.com/v2/resize%3Afit%3A1400/1%2AXurNAi3h2jpD67Pq2OgmrQ%402x.png)
+
+![Image](https://wac-cdn.atlassian.com/dam/jcr%3A4e576671-1b7f-43db-afb5-cf8db8df8e4a/01%20What%20is%20git%20rebase.svg?cdnVersion=3145)
+
+![Image](https://i0.wp.com/css-tricks.com/wp-content/uploads/2021/11/pasted-image-0-8.png?resize=1600%2C554\&ssl=1)
+
+### 🔁 Conceptual Flow
+
+```
+Working Directory
+   ↓ (git add)
+Staging Area
+   ↓ (git commit)
+Local Repository
+   ↓ (push)
+Remote Repository
+```
+
+Advanced commands **manipulate history**, not just files.
 
 ---
 
-## 📦 Setup: Create a Practice Repository
+# 📦 LAB SETUP — Create Practice Repository
+
+### 🎯 Objective
+
+Create a **safe sandbox** to experiment without fear.
 
 ```bash
-# Create a practice directory and initialize Git
 mkdir git-advanced-practice
 cd git-advanced-practice
 git init
+```
 
-# Create initial file
+### Create base file
+
+```bash
 echo "Line 1" > file.txt
-
-# Stage and commit
 git add file.txt
 git commit -m "Initial commit"
 ```
 
+✅ **Outcome**
+
+* Repository initialized
+* One clean commit exists
+
 ---
 
-## 📌 1️⃣ Git Stash — Temporarily Save Uncommitted Changes
+# 📌 1️⃣ Git Stash — Temporarily Save Uncommitted Changes
+
+### 💡 Why Git Stash?
+
+When:
+
+* You’re coding ✍️
+* Suddenly asked to fix prod 🔥
+* You **don’t want to commit half-done work**
+
+---
+
+### 🧪 Step-by-Step Practice
 
 ```bash
-# Modify file without committing
 echo "Temporary work" >> file.txt
-
-# Save changes in a stash
-git stash
-
-# List stashes
-git stash list
-
-# Apply the most recent stash and remove it from the stack
-git stash pop
-
-# Or apply without removing
-git stash apply
-
-# Drop the stash if no longer needed
-git stash drop
-```
-
-```
-nano temp.txt 
 git status
-git stash save
-ls
-cat temp.txt 
+```
+
+📌 File is **modified but not committed**
+
+---
+
+### Save work to stash
+
+```bash
+git stash
+```
+
+✔️ Working directory becomes clean
+
+---
+
+### List stashes
+
+```bash
 git stash list
+```
+
+---
+
+### Inspect stash
+
+```bash
 git stash show
 git stash show -p stash@{0}
-git stash apply stash@{0}
-git stash drop stash@{0}
-git stash pop
-git stash branch feature-from-stash stash@{0}
-git stash -u
-git stash -a
-git stash clear
 ```
 
 ---
 
-## 📌 2️⃣ Git Rebase — Reapply Commits on Top of Another Base
+### Restore stash
 
 ```bash
-# Create a new branch and make a commit
+git stash apply
+# OR
+git stash pop
+```
+
+📌 `pop` = apply + delete
+📌 `apply` = apply only
+
+---
+
+### Advanced Stash Commands (VERY IMPORTANT)
+
+```bash
+nano temp.txt
+git stash save "temp experiment"
+
+git stash -u      # include untracked files
+git stash -a      # include ignored files
+git stash clear   # delete all stashes
+```
+
+---
+
+### Create a branch from stash (real-world lifesaver)
+
+```bash
+git stash branch feature-from-stash stash@{0}
+```
+
+🧠 **Use case**: Turn half-done work into a proper feature branch
+
+---
+
+# 📌 2️⃣ Git Rebase — Rewrite History Cleanly
+
+![Image](https://wac-cdn.atlassian.com/dam/jcr%3A1896adb1-5d49-419a-9b50-3a36adac186c/09.svg?cdnVersion=3140)
+
+![Image](https://wac-cdn.atlassian.com/dam/jcr%3A4e576671-1b7f-43db-afb5-cf8db8df8e4a/01%20What%20is%20git%20rebase.svg?cdnVersion=3124)
+
+### 💡 Why Rebase?
+
+* Clean linear history
+* Avoid noisy merge commits
+* Mandatory before PR merge in many orgs
+
+---
+
+### 🧪 Practice Scenario
+
+#### Create feature branch
+
+```bash
 git checkout -b feature
 echo "Feature line" >> file.txt
 git add file.txt
 git commit -m "Feature commit"
+```
 
-# Switch to main branch and make another commit
+---
+
+#### Update main branch
+
+```bash
 git checkout main
 echo "Main line" >> file.txt
 git add file.txt
 git commit -m "Main commit"
+```
 
-# Rebase feature branch on top of main
+---
+
+#### Rebase feature onto main
+
+```bash
 git checkout feature
 git rebase main
 ```
 
-🔍 **Check history**
+📌 Git reapplies feature commits **on top of main**
+
+---
+
+### Verify history
 
 ```bash
 git log --oneline --graph --all
 ```
 
+✅ Linear, professional history
+
+⚠️ **Golden Rule**
+
+> ❌ Never rebase shared branches (`main`, `dev`)
+
 ---
 
-## 📌 3️⃣ Git Cherry-Pick — Apply Specific Commit to Current Branch
+# 📌 3️⃣ Git Cherry-Pick — Copy a Specific Commit
+
+### 💡 Real DevOps Use Case
+
+* Hotfix applied in `dev`
+* Need **only that fix** in `main`
+
+---
 
 ```bash
-# Find the commit hash you want to cherry-pick
 git log --oneline
-
-# Apply a specific commit
 git cherry-pick <commit-hash>
 ```
 
+✔️ Only selected commit is applied
+❌ No full branch merge
+
 ---
 
-## 📌 4️⃣ Git Reset and Reflog — Rollback Changes
+# 📌 4️⃣ Git Reset & Reflog — Undo Mistakes Safely
+
+### 🧪 Create a test commit
 
 ```bash
-# Make a test commit
 echo "Test line" >> file.txt
 git add file.txt
 git commit -m "Test commit"
-
-# View log
-git log --oneline
-
-# Reset to previous commit (destructive)
-git reset --hard HEAD~1
-
-# View reflog to recover lost commits
-git reflog
-
-# Checkout a lost commit
-git checkout <commit-hash-from-reflog>
 ```
 
 ---
 
-## 📌 5️⃣ Git Tag — Create and Manage Release Tags
+### Reset hard (dangerous)
 
 ```bash
-# Create a lightweight tag
+git reset --hard HEAD~1
+```
+
+😱 Commit disappears from log
+
+---
+
+### Recover using reflog
+
+```bash
+git reflog
+```
+
+```bash
+git checkout <commit-hash-from-reflog>
+```
+
+🧠 **Reflog = Git black box recorder**
+
+---
+
+# 📌 5️⃣ Git Tag — Versioning & Releases
+
+### 💡 Why Tags?
+
+* Mark releases (`v1.0`, `v2.1`)
+* CI/CD uses tags for deployments
+
+---
+
+```bash
 git tag v1.0
-
-# Create an annotated tag
-git tag -a v1.0 -m "Version 1.0 Release"
-
-# List tags
+git tag -a v1.1 -m "Version 1.1 Release"
 git tag
+```
 
-# Push tags to remote
+Push tags:
+
+```bash
 git push origin --tags
 ```
 
 ---
 
-## 📌 6️⃣ Git Clean — Remove Untracked Files
+# 📌 6️⃣ Git Clean — Remove Junk Files
+
+### ⚠️ Dangerous but useful
 
 ```bash
-# Create an untracked file
 touch temp.log
+git status
+```
 
-# See what would be removed
+Dry run:
+
+```bash
 git clean -nd
+```
 
-# Remove untracked files
+Delete:
+
+```bash
 git clean -fd
 ```
 
 ---
 
-## 📌 7️⃣ Git Blame — Find Who Modified Each Line
+# 📌 7️⃣ Git Blame — Who Changed This Line?
 
 ```bash
 git blame file.txt
 ```
 
+🧠 Used in:
+
+* Debugging
+* Audits
+* Incident analysis
+
 ---
 
-## 📌 8️⃣ Git Diff Between Branches
+# 📌 8️⃣ Git Diff — Compare Branches
 
 ```bash
-# View differences between main and feature branch
 git diff main..feature
 ```
 
+Shows:
+
+* Line-by-line differences
+* What will change after merge
+
 ---
 
-## 📌 9️⃣ Git Bisect — Locate the Commit That Introduced a Bug
+# 📌 9️⃣ Git Bisect — Find Bug-Introducing Commit
+
+![Image](https://edrawcloudpublicus.s3.amazonaws.com/work/1905656/2022-3-23/1647997801/main.png)
+
+![Image](https://belev.dev/static/3f8cc369ca0c0b0e8c8c1bb864becd34/a6c62/git-bisect.jpg)
+
+### 💡 Why Bisect?
+
+Binary search through commits
+➡️ Finds bug in **minutes instead of hours**
+
+---
 
 ```bash
-# Start bisect
 git bisect start
-
-# Mark current commit as bad
 git bisect bad
+git bisect good <known-good-commit>
+```
 
-# Mark a known good commit
-git bisect good <commit-hash>
+Test each checkout:
 
-# Git will automatically checkout midpoint commits; test each one and mark as good or bad
-# Continue with:
+```bash
 git bisect good
 # or
 git bisect bad
+```
 
-# When done, reset bisect
+Finish:
+
+```bash
 git bisect reset
 ```
 
 ---
 
-## 📌 🔟 Git Merge — Squash Commits
+# 📌 🔟 Squash Merge — Clean Production History
+
+### 💡 Use Case
+
+Multiple messy feature commits → **1 clean commit in main**
 
 ```bash
-# Merge all feature branch commits into one when merging to main
 git checkout main
 git merge --squash feature
-git commit -m "Merged feature branch as one commit"
+git commit -m "Merged feature as one commit"
 ```
 
 ---
 
-## 📌 📊 View History Graphically
+# 📊 Visualize Everything
 
 ```bash
 git log --oneline --graph --all
@@ -222,17 +391,17 @@ git log --oneline --graph --all
 
 ---
 
-## 📁 Directory Structure after Full Practice
+# 📁 Final Directory Structure
 
 ```
 git-advanced-practice/
 ├── file.txt
-└── (Git repo initialized)
+└── .git/
 ```
 
 ---
 
-## 📑 Bonus: Save Practice as a Script
+# 🧪 BONUS — Run Everything as a Script
 
 ### `git-practice.sh`
 
@@ -240,7 +409,7 @@ git-advanced-practice/
 #!/bin/bash
 
 mkdir git-advanced-practice
-cd git-advanced-practice
+cd git-advanced-practice || exit
 git init
 
 echo "Line 1" > file.txt
@@ -249,7 +418,6 @@ git commit -m "Initial commit"
 
 echo "Temporary work" >> file.txt
 git stash
-
 git stash pop
 
 git checkout -b feature
@@ -268,4 +436,18 @@ git rebase main
 git log --oneline --graph --all
 ```
 
+```bash
+chmod +x git-practice.sh
+./git-practice.sh
+```
+
 ---
+
+## 🎯 What You’ve Achieved
+
+✅ Real Git internals understanding
+✅ Senior-level commands practiced
+✅ CI/CD-ready Git workflows
+✅ Interview + production confidence
+
+
