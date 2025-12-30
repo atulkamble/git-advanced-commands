@@ -524,6 +524,198 @@ chmod +x git-practice.sh
 ```
 
 ---
+Below is a **production-focused Git command set**—the commands you actually rely on when working with **live repositories, CI/CD pipelines, hotfixes, and team workflows**.
+
+---
+
+## 🔐 Repository Safety & Configuration (Production Basics)
+
+```bash
+git status
+git config --global user.name "Your Name"
+git config --global user.email "you@email.com"
+git config --global pull.rebase true
+git config --global core.autocrlf input
+```
+
+✅ Prevents accidental commits, merge chaos, and environment issues.
+
+---
+
+## 🌱 Branching & Release Control (Very Important)
+
+```bash
+git branch
+git branch -a
+git checkout main
+git checkout -b feature/login
+git switch main
+git switch -c hotfix/payment-bug
+git branch -d feature/login
+```
+
+**Production rule:**
+
+* `main / master` → production
+* `develop` → staging
+* `feature/*` → development
+* `hotfix/*` → urgent prod fixes
+
+---
+
+## ⬇️ Syncing with Remote (Daily Production Use)
+
+```bash
+git fetch origin
+git pull origin main
+git pull --rebase origin develop
+```
+
+✅ `fetch` first → inspect → then merge/rebase safely.
+
+---
+
+## 📦 Commit Like a Professional
+
+```bash
+git add .
+git add file.txt
+git commit -m "fix: resolve null pointer in auth service"
+git commit --amend
+```
+
+**Best practice**
+
+* Use meaningful messages
+* Avoid multiple unrelated changes in one commit
+
+---
+
+## 🔁 Merge & Rebase (Controlled Production Flow)
+
+```bash
+git merge develop
+git merge --no-ff feature/login
+git rebase develop
+git rebase -i HEAD~3
+```
+
+✔ `merge` → production/stable
+✔ `rebase` → clean feature history
+
+---
+
+## 🚀 Pushing Code (Production-Safe)
+
+```bash
+git push origin feature/login
+git push origin main
+git push --force-with-lease
+```
+
+⚠️ Never use `--force` on shared branches
+✔ `--force-with-lease` is safer
+
+---
+
+## 🏷️ Versioning & Releases (Critical for Prod)
+
+```bash
+git tag
+git tag v1.0.0
+git tag -a v1.1.0 -m "production release"
+git push origin v1.1.0
+git push --tags
+```
+
+Used for:
+
+* Rollbacks
+* Release tracking
+* CI/CD deployments
+
+---
+
+## 🔍 Investigation & Debugging (Prod Incidents)
+
+```bash
+git log --oneline --graph --all
+git log -p
+git blame app.py
+git diff
+git diff main..develop
+```
+
+🔥 `git blame` is gold during outages.
+
+---
+
+## ⏪ Rollback & Recovery (MOST IMPORTANT)
+
+```bash
+git revert <commit-id>
+git reset --soft HEAD~1
+git reset --hard HEAD~1
+git checkout <commit-id>
+```
+
+### Safe Production Rule:
+
+✔ Use **`git revert`**
+❌ Avoid `reset --hard` on shared branches
+
+---
+
+## 🧹 Clean & Maintenance
+
+```bash
+git stash
+git stash apply
+git stash drop
+git clean -fd
+```
+
+Useful before:
+
+* Hotfixes
+* Branch switches
+* Emergency debugging
+
+---
+
+## 🔐 Production Git Workflow (Recommended)
+
+```bash
+feature → develop → main → tag → deploy
+```
+
+Example:
+
+```bash
+git checkout develop
+git merge feature/api
+git checkout main
+git merge develop
+git tag v2.0.1
+git push origin main --tags
+```
+
+---
+
+## 🧠 Commands Every DevOps Engineer MUST Know
+
+| Scenario             | Command              |
+| -------------------- | -------------------- |
+| Rollback prod        | `git revert`         |
+| Check who broke code | `git blame`          |
+| Clean history        | `git rebase -i`      |
+| Safe force push      | `--force-with-lease` |
+| Emergency fix        | `hotfix/*` branch    |
+| Release deploy       | `git tag`            |
+
+---
+
+
 
 ## 🎯 What You’ve Achieved
 
