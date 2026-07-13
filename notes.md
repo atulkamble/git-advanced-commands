@@ -1,5 +1,3 @@
-Here are focused study notes based on the questions that were missed.
-
 # Git Advanced Study Notes
 
 ## 1. Git Merge
